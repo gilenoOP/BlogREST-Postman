@@ -1,0 +1,1877 @@
+{
+	"info": {
+		"_postman_id": "322cdb98-88be-4e95-ac60-430af4522943",
+		"name": "Blog-REST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30170341"
+	},
+	"item": [
+		{
+			"name": "User registration",
+			"item": [
+				{
+					"name": "Register a new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('It should register a new user with valid data', () =>{\r",
+									"    pm.response.to.have.status(201)\r",
+									"    const { user } = pm.response.json()\r",
+									"    pm.expect(user.id).to.greaterThan(0)\r",
+									"    pm.expect(user.name).to.not.null\r",
+									"    pm.expect(user.email).to.not.null\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const email = `gileno.${new Date().getTime()}@teste.com`\r",
+									"pm.collectionVariables.set('userEmail', email)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Tester Tester\",\r\n  \"email\": \"{{userEmail}}\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user without providing a name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user without providing a name', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('User name must have between 5 and 50 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"\",\r\n  \"email\": \"testando@testando.com\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user without providing an e-mail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user without providing an e-mail', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Invalid email')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Tester Tester\",\r\n  \"email\": \"\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user without providing a password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user without providing a password', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Password must contain at least 8 characters, 1 uppercase character, and 1 digit')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Tester Tester\",\r\n  \"email\": \"testando@testando.com\",\r\n  \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user without providing a name, an e-mail and a password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user without providing a name, an e-mail and a password', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('User name must have between 5 and 50 characters')\r",
+									"    pm.expect(messages[1]).to.equal('Invalid email')\r",
+									"    pm.expect(messages[2]).to.equal('Password must contain at least 8 characters, 1 uppercase character, and 1 digit')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"\",\r\n  \"email\": \"\",\r\n  \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user with an existing e-mail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user with an existing e-mail', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('A user with this email already exists')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Tester Tester\",\r\n  \"email\": \"{{userEmail}}\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user with a name of less than 5 characters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user with a name of less than 5 characters', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('User name must have between 5 and 50 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test\",\r\n  \"email\": \"testando@testando.com\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user with a name longer than 50 characters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user with a name longer than 50 characters', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('User name must have between 5 and 50 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Tester TesterTester TesterTester TesterTester Teste\",\r\n  \"email\": \"testando@testando.com\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user with invalid e-mail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user with invalid e-mail', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Invalid email')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Tester Tester\",\r\n  \"email\": \"tester@tester\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user with a password less than 8 characters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user with a password less than 8 characters', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Password must contain at least 8 characters, 1 uppercase character, and 1 digit')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Tester Tester\",\r\n  \"email\": \"testando@testando.com\",\r\n  \"password\": \"Senha12\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user with a password without at least one uppercase character",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user with a password without at least one uppercase character', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Password must contain at least 8 characters, 1 uppercase character, and 1 digit')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Tester Tester\",\r\n  \"email\": \"testando@testando.com\",\r\n  \"password\": \"senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new user with a password without at least one digit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new user with a password without at least one digit', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Password must contain at least 8 characters, 1 uppercase character, and 1 digit')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Tester Tester\",\r\n  \"email\": \"testando@testadno.com\",\r\n  \"password\": \"SenhaSenha\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User authentication",
+			"item": [
+				{
+					"name": "Authenticate a user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const { authorized, user, token } = pm.response.json()\r",
+									"pm.collectionVariables.set('userId', user.id)\r",
+									"pm.collectionVariables.set('userName', user.name)\r",
+									"pm.collectionVariables.set('userEmail', user.email)\r",
+									"pm.collectionVariables.set('token', token)\r",
+									"\r",
+									"pm.test('It should authenticate a user with valid credentials', () =>{\r",
+									"    pm.response.to.have.status(200)\r",
+									"    pm.expect(authorized).to.equal(true)\r",
+									"    pm.expect(token).to.have.length.greaterThan(0)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{userEmail}}\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate a user with incorrect password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not authenticate a user with incorrect password', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { authorized, message } = pm.response.json()\r",
+									"    pm.expect(authorized).to.equal(false)\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"tester@tester.com\",\r\n  \"password\": \"Senha12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate a user with a non-existent email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not authenticate a user with a non-existent email', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { authorized, message } = pm.response.json()\r",
+									"    pm.expect(authorized).to.equal(false)\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"tester@testador.com\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate a user with invalid e-mail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not authenticate a user with invalid e-mail', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { authorized, message } = pm.response.json()\r",
+									"    pm.expect(authorized).to.equal(false)\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"tester@tester\",\r\n  \"password\": \"Senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate a user with a password less than 8 characters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not authenticate a user with a password less than 8 characters', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { authorized, message } = pm.response.json()\r",
+									"    pm.expect(authorized).to.equal(false)\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"tester@tester.com\",\r\n  \"password\": \"Senha12\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate a user with a password without at least one uppercase character",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not authenticate a user with invalid e-mail', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { authorized, message } = pm.response.json()\r",
+									"    pm.expect(authorized).to.equal(false)\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"tester@tester.com\",\r\n  \"password\": \"senha1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate a user with a password without at least one digit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not authenticate a user with invalid e-mail', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { authorized, message } = pm.response.json()\r",
+									"    pm.expect(authorized).to.equal(false)\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"tester@tester.com\",\r\n  \"password\": \"SenhaSenha\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post registration",
+			"item": [
+				{
+					"name": "Register a new post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const { post } = pm.response.json()\r",
+									"pm.collectionVariables.set('postId', post.id)\r",
+									"pm.collectionVariables.set('postTitle', post.title)\r",
+									"pm.collectionVariables.set('postContent', post.content)\r",
+									"\r",
+									"pm.test('It should register a new post', () =>{\r",
+									"    pm.response.to.have.status(201)\r",
+									"    pm.expect(post.title).to.not.null\r",
+									"    pm.expect(post.content).to.not.null\r",
+									"    pm.expect(post.id).to.greaterThan(0)\r",
+									"    pm.expect(post.user.id).to.equal(pm.collectionVariables.get('userId'))\r",
+									"    pm.expect(post.user.name).to.equal(pm.collectionVariables.get('userName'))\r",
+									"    pm.expect(post.user.email).to.equal(pm.collectionVariables.get('userEmail'))\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Learning programming with GOP\",\r\n  \"content\": \"Go is a very popular programming language, which is great for learning programming logics.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new post with a title of less than 5 characters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new post with a title of less than 5 characters', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Post title must have between 5 and 30 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"test\",\r\n  \"content\": \"Go is a very popular programming language, which is great for learning programming logics.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new post with a title longer than 30 characters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new post with a title longer than 30 characters', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Post title must have between 5 and 30 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Learning programming with Goooo\",\r\n  \"content\": \"Go is a very popular programming language, which is great for learning programming logics.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new post with a content of less than 5 characters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new post with a content of less than 5 characters', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Post content must have between 5 and 144 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Learning programming with Go\",\r\n  \"content\": \"Go.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new post with a content longer than 144 characters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new post with a content longer than 144 characters', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Post content must have between 5 and 144 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Learning programming with Go\",\r\n  \"content\": \"Go is a very popular programming language, which is great for learning programming logics. Go is a very popular programming language, which is GO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new post without providing a title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new post without providing a title', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Post title must have between 5 and 30 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"\",\r\n  \"content\": \"Go is a very popular programming language, which is great for learning programming logics.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new post without providing a content",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new post without providing a content', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Post content must have between 5 and 144 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Learning programming with Go\",\r\n  \"content\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new post without providing a title and a content",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new post without providing a title and a content', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { messages } = pm.response.json()\r",
+									"    pm.expect(messages[0]).to.equal('Post title must have between 5 and 30 characters')\r",
+									"    pm.expect(messages[1]).to.equal('Post content must have between 5 and 144 characters')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"\",\r\n  \"content\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new post without providing a token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new post without providing a token', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Learning programming with Go\",\r\n  \"content\": \"Go is a very popular programming language, which is great for learning programming logics.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register a new post with a invalid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not register a new post with a invalid token', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZ2lsZW5vLjE2OTYzNzY5NDQzMzdAdGVzdGUuY29tIiwidGltZXN0YW1wIjoiMjAyMy0xMC0wNFQwMToyNzoyOC4xOTZaIiwiaWF0IjoxNjk2MzgyODQ4LCJleHAiOjE2OTYzODY0NDh9.SRnZ7GZ-MJED4Yc9cYrATP8cnTaY0d2emx9LAKKND_A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Learning programming with Go\",\r\n  \"content\": \"Go is a very popular programming language, which is great for learning programming logics.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Retrieve a post",
+			"item": [
+				{
+					"name": "Retrieves a post by its id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('It should find an existing post by id', () =>{\r",
+									"    pm.response.to.have.status(200)\r",
+									"    const { post } = pm.response.json()\r",
+									"    pm.expect(post.title).to.equal(pm.collectionVariables.get('postTitle'))\r",
+									"    pm.expect(post.content).to.equal(pm.collectionVariables.get('postContent'))\r",
+									"    pm.expect(post.id).to.equal(pm.collectionVariables.get('postId'))\r",
+									"    pm.expect(post.user.id).to.equal(pm.collectionVariables.get('userId'))\r",
+									"    pm.expect(post.user.name).to.equal(pm.collectionVariables.get('userName'))\r",
+									"    pm.expect(post.user.email).to.equal(pm.collectionVariables.get('userEmail'))\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/{{postId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieves a post by with a invalid id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not find a post with a invalid id', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('Invalid id')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/LA",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"LA"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieves a post by with a non-existent id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not find a post with a non-existent id', () =>{\r",
+									"    pm.response.to.have.status(404)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('Post not found')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/9000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"9000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Retrieve all user posts",
+			"item": [
+				{
+					"name": "Retrieves all the posts created by the related user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('It should find an existing post by id', () =>{\r",
+									"    pm.response.to.have.status(200)\r",
+									"    const { posts } = pm.response.json()\r",
+									"    \r",
+									"    pm.expect(posts).to.be.an('array');\r",
+									"\r",
+									"    // Iterar através dos posts e validar cada um deles\r",
+									"    posts.forEach(post => {\r",
+									"        pm.expect(post).to.have.property('id') // Verifica se há um campo 'id'\r",
+									"        pm.expect(posts.id).to.not.null\r",
+									"        pm.expect(post).to.have.property('title') // Verifica se há um campo 'title'\r",
+									"        pm.expect(posts.title).to.not.null\r",
+									"        pm.expect(post).to.have.property('content') // Verifica se há um campo 'content'\r",
+									"        pm.expect(posts.content).to.not.null\r",
+									"        \r",
+									"        // Você pode adicionar mais validações específicas aqui, se necessário\r",
+									"    })\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/user/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"user",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post deletion",
+			"item": [
+				{
+					"name": "Delete a post by its id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('It should delete an existing post by id', () =>{\r",
+									"    pm.response.to.have.status(200)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('Post deleted')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/{{postId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post by with a invalid id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not delete a post with a invalid id', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('Invalid id')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/LA",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"LA"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post by with a non-existent id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not delete a post with a non-existent id', () =>{\r",
+									"    pm.response.to.have.status(404)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('Post not found')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/9000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"9000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post without providing a token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not delete a post without providing a token', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/{{postId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post with a invalid token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Should not delete a post with a invalid token', () =>{\r",
+									"    pm.response.to.have.status(401)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('User not authorized')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZ2lsZW5vLjE2OTYzNzY5NDQzMzdAdGVzdGUuY29tIiwidGltZXN0YW1wIjoiMjAyMy0xMC0wNFQwMToyNzoyOC4xOTZaIiwiaWF0IjoxNjk2MzgyODQ4LCJleHAiOjE2OTYzODY0NDh9.SRnZ7GZ-MJED4Yc9cYrATP8cnTaY0d2emx9LAKKND_A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/{{postId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User deletion",
+			"item": [
+				{
+					"name": "Delete a user by e-mail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('It should delete a user by e-mail', () =>{\r",
+									"    pm.response.to.have.status(200)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('User deleted')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userEmail}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{userEmail}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a user by e-mail with invalid e-mail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('', () =>{\r",
+									"    pm.response.to.have.status(400)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('Invalid e-mail')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/tester@tester",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"tester@tester"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a user by e-mail with a non-existent user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('', () =>{\r",
+									"    pm.response.to.have.status(404)\r",
+									"    const { message } = pm.response.json()\r",
+									"    pm.expect(message).to.equal('User not found')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/testando@testando.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"testando@testando.com"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "userEmail",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "postId",
+			"value": ""
+		},
+		{
+			"key": "userName",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "postContent",
+			"value": ""
+		},
+		{
+			"key": "postTitle",
+			"value": ""
+		}
+	]
+}
