@@ -1,0 +1,44 @@
+name: Testes da API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v2
+
+    - name: Instalar Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Instalar dependências
+      run: npm install
+
+    - name: Iniciar a API
+      run: npm start &
+    
+    - name: Aguardar alguns segundos para a API ficar pronta
+      run: sleep 10
+
+    - name: Instalar Newman globalmente
+      run: npm install -g newman
+
+    - name: Instalar Newman Reporter HTMLExtra globalmente
+      run: npm install -g newman-reporter-htmlextra
+
+    - name: Executar testes com Newman e gerar relatório HTML
+      run: |
+        newman run Blog_api_endpoints_gop.postman_collection.json -r htmlextra
+
+    - name: Publicar relatório HTML
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-reports
+        path: newman/htmlextra
