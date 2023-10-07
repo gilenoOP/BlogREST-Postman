@@ -35,7 +35,7 @@ jobs:
 
     - name: Executar testes com Newman e gerar relatório HTML
       run: |
-        newman run blog-api/testes_postman/Blog_api_endpoints_gop.postman_collection.json -r htmlextra
+        newman run testes_postman\Blog_api_endpoints_gop.postman_collection.json -r htmlextra
 
     - name: Publicar relatório HTML
       uses: actions/upload-artifact@v2
